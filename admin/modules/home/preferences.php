@@ -44,7 +44,7 @@ if($mybb->input['action'] == "recovery_codes")
 }
 if(!$mybb->input['action'])
 {
-	require_once MYBB_ROOT."inc/3rdparty/mybb2fa/GoogleAuthenticator.php";
+	require_once MYBB_ROOT."inc/3rdparty/2fa/GoogleAuthenticator.php";
 	$auth = new PHPGangsta_GoogleAuthenticator;
 
 	$plugins->run_hooks("admin_home_preferences_start");
@@ -174,7 +174,13 @@ if(!$mybb->input['action'])
 function generate_recovery_codes()
 {
 	$t = array();
-	for($i = 0; $i<10; $i++)
-		$t[] = random_str(6);
+	while(count($t) < 10)
+	{
+		$g = random_str(6);
+		if(!in_array($g, $t))
+		{
+			$t[] = $g;
+		}
+	}
 	return $t;
 }
